@@ -103,7 +103,9 @@ class ProfilePictureBlogWidget extends StatelessWidget {
       decoration: BoxDecoration(
         color: context.theme.dialogBackgroundColor,
         borderRadius: () {
-          return (borderRadius != null) ? borderRadius : BorderRadius.circular(15);
+          return (borderRadius != null)
+              ? borderRadius
+              : BorderRadius.circular(15);
         }(),
         image: image,
         boxShadow: [

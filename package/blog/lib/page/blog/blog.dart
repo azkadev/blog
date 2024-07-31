@@ -173,10 +173,12 @@ class _BlogPageBlogState extends State<BlogPageBlog> {
                         },
                         icon: Icon(
                           () {
-                            if (widget.generalLibFlutterApp.themeMode == ThemeMode.dark) {
+                            if (widget.generalLibFlutterApp.themeMode ==
+                                ThemeMode.dark) {
                               return Icons.dark_mode;
                             }
-                            if (widget.generalLibFlutterApp.themeMode == ThemeMode.light) {
+                            if (widget.generalLibFlutterApp.themeMode ==
+                                ThemeMode.light) {
                               return Icons.light_mode;
                             }
 
@@ -212,13 +214,13 @@ class _BlogPageBlogState extends State<BlogPageBlog> {
   }
 
   Widget bodySideBar() {
-    List<Widget> children = [];
-    return SizedBox.shrink();
+    return const SizedBox.shrink();
   }
 
   Widget bodyContent() {
     return SingleChildScrollView(
-      physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+      physics:
+          const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
       child: ConstrainedBox(
         constraints: BoxConstraints(
           minHeight: context.height - globalKey.sizeRenderBox().height,

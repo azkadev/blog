@@ -44,7 +44,7 @@ import "package:path/path.dart" as path;
 import "package:yaml/yaml.dart" as yaml;
 import "package:yaml_writer/yaml_writer.dart";
 
-String version_package = "0.0.2";
+String version_package = "0.0.1";
 Future<void> pubspecUpdate({
   required File filePubspec,
   required List<String> librarys,
@@ -82,13 +82,7 @@ Future<void> pubspecUpdate({
           yaml_code_clone["dependencies"][key] = "^${version_package}";
         }
       });
-      (yaml_code_clone["dependencies"] as Map).forEach((key, value) {
-        if (key == "general_lib") {
-          yaml_code_clone["dependencies"][key] = "^0.0.36";
-        }
-        if (key == "general_lib_flutter") {
-          yaml_code_clone["dependencies"][key] = "^0.0.19";
-        }
+      (yaml_code_clone["dependencies"] as Map).forEach((key, value) { 
       });
     }
     var yamlDoc = YamlWriter().write(yaml_code_clone);

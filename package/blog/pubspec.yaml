@@ -1,6 +1,6 @@
 name: 'blog'
 description: 'A Library for create blog super easy and fast customizable'
-version: '0.0.2'
+version: '0.0.1'
 environment: 
   sdk: '>=3.3.3 <4.0.0'
   flutter: '>=1.17.0'
@@ -9,8 +9,8 @@ dependencies:
     sdk: 'flutter'
   cupertino_icons: '^1.0.6'
   path: '^1.9.0'
-  general_lib: '^0.0.43'
-  general_lib_flutter: '^0.0.24'
+  general_lib: '^0.0.44'
+  general_lib_flutter: '^0.0.25'
   markdown_flutter: '^0.0.7'
   markdown_widget: '^2.3.2+2'
   carousel_slider: '^4.2.1'

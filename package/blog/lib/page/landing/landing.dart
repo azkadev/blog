@@ -59,7 +59,8 @@ class LandingPageBlog extends StatefulWidget {
 class _LandingPageBlogState extends State<LandingPageBlog> {
   GlobalKey globalKey = GlobalKey();
 
-  ScrollControllerAutoKeepStateData scroll_controller_auto_keep_state_data = ScrollControllerAutoKeepStateData(keyId: "landing_page_blog");
+  ScrollControllerAutoKeepStateData scroll_controller_auto_keep_state_data =
+      ScrollControllerAutoKeepStateData(keyId: "landing_page_blog");
   @override
   void initState() {
     super.initState();
@@ -145,10 +146,12 @@ class _LandingPageBlogState extends State<LandingPageBlog> {
                         },
                         icon: Icon(
                           () {
-                            if (widget.generalLibFlutterApp.themeMode == ThemeMode.dark) {
+                            if (widget.generalLibFlutterApp.themeMode ==
+                                ThemeMode.dark) {
                               return Icons.dark_mode;
                             }
-                            if (widget.generalLibFlutterApp.themeMode == ThemeMode.light) {
+                            if (widget.generalLibFlutterApp.themeMode ==
+                                ThemeMode.light) {
                               return Icons.light_mode;
                             }
 
@@ -167,8 +170,10 @@ class _LandingPageBlogState extends State<LandingPageBlog> {
       body: scroll_controller_auto_keep_state_data.builderWidget(
         builder: (context, pageStorageBucket) {
           return SingleChildScrollView(
-            controller: scroll_controller_auto_keep_state_data.scroll_controller,
-            physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+            controller:
+                scroll_controller_auto_keep_state_data.scroll_controller,
+            physics: const BouncingScrollPhysics(
+                parent: AlwaysScrollableScrollPhysics()),
             child: ConstrainedBox(
               constraints: BoxConstraints(
                 minHeight: context.height,
@@ -189,7 +194,8 @@ class _LandingPageBlogState extends State<LandingPageBlog> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Visibility(
-                            visible: "${widget.blogData.logo}".trim().isNotEmpty,
+                            visible:
+                                "${widget.blogData.logo}".trim().isNotEmpty,
                             child: Image.asset(
                               "${widget.blogData.logo}",
                             ),
@@ -214,7 +220,8 @@ class _LandingPageBlogState extends State<LandingPageBlog> {
 
                           //
                           AuthorBlogWidget(
-                            authorUrlSocialMedias: widget.blogData.author_url_social_medias,
+                            authorUrlSocialMedias:
+                                widget.blogData.author_url_social_medias,
                           ),
                         ],
                       ),
@@ -286,7 +293,12 @@ Berikut adalah beberapa contoh project yang menggunakan library ${widget.blogDat
                         builder: (context) {
                           List<BlogsData> blogs = widget.blogData.blogs;
                           return GridView.builder(
-                            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, mainAxisSpacing: 5, crossAxisSpacing: 5, childAspectRatio: 16 / 9),
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 3,
+                                    mainAxisSpacing: 5,
+                                    crossAxisSpacing: 5,
+                                    childAspectRatio: 16 / 9),
                             shrinkWrap: true,
                             physics: const NeverScrollableScrollPhysics(),
                             itemCount: blogs.length,
@@ -318,14 +330,18 @@ Berikut adalah beberapa contoh project yang menggunakan library ${widget.blogDat
                                   ),
                                   Container(
                                     decoration: BoxDecoration(
-                                      color: context.theme.dialogBackgroundColor.withOpacity(0.85),
-                                      borderRadius: BorderRadiusDirectional.circular(20),
+                                      color: context.theme.dialogBackgroundColor
+                                          .withOpacity(0.85),
+                                      borderRadius:
+                                          BorderRadiusDirectional.circular(20),
                                       boxShadow: [
                                         BoxShadow(
-                                          color: context.theme.shadowColor.withAlpha(110),
+                                          color: context.theme.shadowColor
+                                              .withAlpha(110),
                                           spreadRadius: 1,
                                           blurRadius: 7,
-                                          offset: const Offset(0, 3), // changes position of shadow
+                                          offset: const Offset(0,
+                                              3), // changes position of shadow
                                         ),
                                       ],
                                     ),
@@ -337,9 +353,13 @@ Berikut adalah beberapa contoh project yang menggunakan library ${widget.blogDat
                                             builder: (context) {
                                               return BlogPageBlog(
                                                 blogsData: blogsData,
-                                                authorUrlSocialMedias: widget.blogData.author_url_social_medias,
-                                                blogFooterData: widget.blogData.footer,
-                                                generalLibFlutterApp: widget.generalLibFlutterApp,
+                                                authorUrlSocialMedias: widget
+                                                    .blogData
+                                                    .author_url_social_medias,
+                                                blogFooterData:
+                                                    widget.blogData.footer,
+                                                generalLibFlutterApp:
+                                                    widget.generalLibFlutterApp,
                                               );
                                             },
                                           ),
@@ -358,7 +378,8 @@ Berikut adalah beberapa contoh project yang menggunakan library ${widget.blogDat
                       ),
                     ),
                     FooterBlogWidget(
-                      authorUrlSocialMedias: widget.blogData.author_url_social_medias,
+                      authorUrlSocialMedias:
+                          widget.blogData.author_url_social_medias,
                       blogFooterData: widget.blogData.footer,
                     ),
                   ];

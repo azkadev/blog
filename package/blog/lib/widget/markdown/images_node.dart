@@ -145,7 +145,8 @@ class _ImagesWidgetState extends State<MediasWidget> {
         return null;
       }
       if (RegExp(r"^(http(s)?:)", caseSensitive: false).hasMatch(image_data)) {
-        if (RegExp("(youtube.com)", caseSensitive: false).hasMatch(image_data)) {
+        if (RegExp("(youtube.com)", caseSensitive: false)
+            .hasMatch(image_data)) {
           is_youtube = true;
         }
         return Image.network(
@@ -155,7 +156,8 @@ class _ImagesWidgetState extends State<MediasWidget> {
           },
         );
       }
-      if (RegExp(r"^(assets|packages)", caseSensitive: false).hasMatch(image_data)) {
+      if (RegExp(r"^(assets|packages)", caseSensitive: false)
+          .hasMatch(image_data)) {
         return Image.asset(
           image_data,
           errorBuilder: (context, error, stackTrace) {
