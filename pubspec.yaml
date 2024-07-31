@@ -1,6 +1,6 @@
 name: 'blog_project'
 description: 'A Library for create blog super easy and fast customizable'
-version: '0.0.2'
+version: '0.0.1'
 repository: 'https://github.com/azkadev/blog'
 homepage: 'https://github.com/azkadev/blog'
 issue_tracker: 'https://github.com/azkadev/blog/issues'
