@@ -58,23 +58,14 @@ void main(List<String> args) async {
 
 List<Map> respond_schemes = [
   {
-    "@type": "blogData",
+    "@type": "blogHomeData",
     "logo": "",
     "title": "",
-    "description": "",
-    "content": "",
+    "description": "", 
     "author_url_social_medias": [
       "url",
-    ],
-    "blogs": [
-      {
-        "@type": "blogsData",
-        "blog_id": "",
-        "title": "",
-        "description": "",
-        "content": "",
-      },
-    ],
+    ], 
+
     "footer": {
       "@type": "blogFooterData",
       "footers": [
@@ -112,9 +103,21 @@ List<Map> respond_schemes = [
   {
     "@type": "blogsData",
     "blog_id": "",
-    "title": "",
-    "description": "",
-    "content": "",
+    "author_user_id": 0,
+    "photo_blog": "",
+    "create_date": 0,
+    "edit_date": 0,
+    "title": "", 
+    "hastaghs": [
+""
+    ],
+    "contents": [
+      {
+        "@type": "blogContents",
+        "content_id": "",
+        "content": "",
+      },
+    ],
   },
   {
     "@type": "footerData",
@@ -122,3 +125,9 @@ List<Map> respond_schemes = [
     "url": "",
   },
 ];
+
+Map blogSideBar = {
+  "@type": "blogSideBar",
+  "title": "",
+  "navigate_content_id": "content",
+};

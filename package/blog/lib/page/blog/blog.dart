@@ -39,6 +39,7 @@ import 'package:general_lib_flutter/general_lib_flutter.dart';
 import 'package:blog/scheme/scheme.dart';
 import 'package:blog/widget/footer.dart';
 import 'package:blog/widget/markdown/markdown.dart';
+import 'package:icons_plus/icons_plus.dart';
 
 class BlogPageBlog extends StatefulWidget {
   final BlogsData blogsData;
@@ -59,7 +60,8 @@ class BlogPageBlog extends StatefulWidget {
 
 class _BlogPageBlogState extends State<BlogPageBlog> {
   GlobalKey globalKey = GlobalKey();
-  ScrollController scrollController = ScrollController();
+
+  ScrollControllerAutoKeepStateData scroll_controller_auto__keep_state_data = ScrollControllerAutoKeepStateData(keyId: "blog_page");
 
   @override
   void initState() {
@@ -69,12 +71,22 @@ class _BlogPageBlogState extends State<BlogPageBlog> {
     });
   }
 
+  List<BlogContents> contents = [];
+  int getIndex({
+    required String contentId,
+  }) {
+    return contents.indexWhere((e) => e.content_id == contentId);
+  }
+
   Future<void> refresh() async {
     setState(() {});
 
     bool is_succes = await Future(() async {
       try {
-        setState(() {});
+        setState(() {
+          contents = widget.blogsData.contents;
+        });
+        setContent(contentId: contents.first.content_id ?? "");
         return true;
       } catch (e) {
         context.navigator().pop();
@@ -92,6 +104,18 @@ class _BlogPageBlogState extends State<BlogPageBlog> {
   }) {
     navigate_content_id = contentId;
     setState(() {});
+    content = contents.firstWhere((element) => element.content_id == navigate_content_id).content ?? "";
+    setState(() {});
+  }
+
+  void setContentByIndex({
+    required int indexContent,
+  }) {
+    setState(() {});
+    BlogContents blogContents = contents[indexContent];
+    navigate_content_id = blogContents.content_id ?? "";
+    content = blogContents.content ?? "";
+    scroll_controller_auto__keep_state_data.scroll_controller.position.restoreOffset(0);
     setState(() {});
   }
 
@@ -103,6 +127,7 @@ class _BlogPageBlogState extends State<BlogPageBlog> {
   void dispose() {
     navigate_content_id = "";
     content = "";
+    scroll_controller_auto__keep_state_data.dispose();
     // TODO: implement dispose
     super.dispose();
   }
@@ -150,12 +175,30 @@ class _BlogPageBlogState extends State<BlogPageBlog> {
                     onPressed: () {
                       context.navigator().pop();
                     },
-                    icon: const Icon(Icons.arrow_back),
+                    icon: Icon(
+                      Icons.arrow_back,
+                      shadows: [
+                        BoxShadow(
+                          color: context.theme.shadowColor.withAlpha(110),
+                          spreadRadius: 1,
+                          blurRadius: 7,
+                          offset: const Offset(0, 3), // changes position of shadow
+                        ),
+                      ],
+                    ),
                   ),
                   Text(
                     "${widget.blogsData.title}".trim(),
                     style: TextStyle(
                       color: context.theme.indicatorColor,
+                      shadows: [
+                        BoxShadow(
+                          color: context.theme.shadowColor.withAlpha(110),
+                          spreadRadius: 1,
+                          blurRadius: 7,
+                          offset: const Offset(0, 3), // changes position of shadow
+                        ),
+                      ],
                     ),
                   ),
                   // auto change theme
@@ -173,17 +216,23 @@ class _BlogPageBlogState extends State<BlogPageBlog> {
                         },
                         icon: Icon(
                           () {
-                            if (widget.generalLibFlutterApp.themeMode ==
-                                ThemeMode.dark) {
+                            if (widget.generalLibFlutterApp.themeMode == ThemeMode.dark) {
                               return Icons.dark_mode;
                             }
-                            if (widget.generalLibFlutterApp.themeMode ==
-                                ThemeMode.light) {
+                            if (widget.generalLibFlutterApp.themeMode == ThemeMode.light) {
                               return Icons.light_mode;
                             }
 
                             return Icons.auto_mode;
                           }(),
+                          shadows: [
+                            BoxShadow(
+                              color: context.theme.shadowColor.withAlpha(110),
+                              spreadRadius: 1,
+                              blurRadius: 7,
+                              offset: const Offset(0, 3), // changes position of shadow
+                            ),
+                          ],
                         ),
                       );
                     },
@@ -194,33 +243,77 @@ class _BlogPageBlogState extends State<BlogPageBlog> {
           ),
         ),
       ),
-      body: ConstrainedBox(
-        constraints: BoxConstraints(
-          minHeight: context.height,
-          minWidth: context.width,
-          maxHeight: context.height,
-          maxWidth: context.width,
-        ),
-        child: Column(
-          children: [
-            SizedBox.fromSize(
-              size: globalKey.sizeRenderBox(),
-            ),
-            bodyContent(),
-          ],
-        ),
-      ),
+      body: () {
+        if (context.orientation.isPortrait) {
+          return bodyContent();
+        }
+        return ConstrainedBox(
+          constraints: BoxConstraints(
+            minHeight: context.height,
+            minWidth: context.width,
+            maxHeight: context.height,
+            maxWidth: context.width,
+          ),
+          child: Column(
+            children: [
+              SizedBox.fromSize(
+                size: globalKey.sizeRenderBox(),
+              ),
+              Expanded(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      flex: 5,
+                      child: bodyContent(),
+                    ),
+                    // VerticalDivider(
+                    //   color: context.theme.cardColor,
+                    // ),
+                    Expanded(
+                      flex: 1,
+                      child: bodySideBar(),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      }(),
     );
   }
 
   Widget bodySideBar() {
-    return const SizedBox.shrink();
-  }
+    List<Widget> children = [];
 
-  Widget bodyContent() {
+    // for (var element in widget.blogsData.sidebars) {
+    //    children.add(
+    //     TextButton(
+    //       onPressed: () async {
+    //         setContent(contentId: element.navigate_content_id ?? "");
+    //       },
+    //       child: Text(
+    //         "${element.title}",
+    //         style: TextStyle(
+    //           color: (element.navigate_content_id == navigate_content_id) ? context.theme.indicatorColor : context.theme.cardColor,
+    //           fontSize: 15,
+    //           shadows: [
+    //             BoxShadow(
+    //               color: context.theme.shadowColor.withAlpha(110),
+    //               spreadRadius: 1,
+    //               blurRadius: 7,
+    //               offset: const Offset(0, 3), // changes position of shadow
+    //             ),
+    //           ],
+    //         ),
+    //       ),
+    //     ),
+    //   );
+    // }
+
     return SingleChildScrollView(
-      physics:
-          const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+      physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
       child: ConstrainedBox(
         constraints: BoxConstraints(
           minHeight: context.height - globalKey.sizeRenderBox().height,
@@ -228,22 +321,118 @@ class _BlogPageBlogState extends State<BlogPageBlog> {
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(20),
-              child: MarkdownBlogWidget(
-                alignment: Alignment.center,
-                text: () async {
-                  return content.trim();
-                },
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: children,
+        ),
+      ),
+    );
+  }
+
+  Widget bodyContent() {
+    return scroll_controller_auto__keep_state_data.build(
+      child: Builder(
+        builder: (context) {
+          return SingleChildScrollView(
+            physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+            controller: scroll_controller_auto__keep_state_data.scroll_controller,
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight: context.height - globalKey.sizeRenderBox().height,
+                minWidth: context.width,
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (context.orientation.isPortrait) ...[
+                    SizedBox(
+                      height: globalKey.sizeRenderBox().height,
+                    ),
+                  ],
+                  // () {
+                  //   final Size size = Size(
+                  //     (context.width),
+                  //     (context.height / 1.5) - 20,
+                  //   );
+                  //   return Container(
+                  //     width: size.width,
+                  //     height: size.height,
+                  //     // margin: const EdgeInsets.all(10),
+                  //     alignment: Alignment.center,
+                  //     // decoration: BoxDecoration(
+                  //     //   border: Border.all(
+                  //     //     color: context.theme.indicatorColor,
+                  //     //   ),
+                  //     // ),
+                  //     // padding: EdgeInsets.all(5),
+                  //     child: MediaQuery(
+                  //       data: context.mediaQueryData.copyWith(
+                  //         size: size,
+                  //       ),
+                  //       child: Builder(
+                  //         builder: (context) {
+                  //           return BlogContainerWidget(
+                  //             blogsData: widget.blogsData,
+                  //             onTap: () {},
+                  //           );
+                  //         },
+                  //       ),
+                  //     ),
+                  //   );
+                  // }(),
+                  Padding(
+                    padding: const EdgeInsets.all(5),
+                    child: MarkdownBlogWidget(
+                      alignment: Alignment.center,
+                      text: () async {
+                        return content.trim();
+                      },
+                    ),
+                  ),
+                  if (contents.length > 1) ...[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: () {
+                        final List<Widget> children = [];
+                        final int total_length = contents.length;
+                        final int index = getIndex(contentId: navigate_content_id);
+                        if ((index - 1) > -1) {
+                          children.add(IconButton(
+                            onPressed: () {
+                              setContentByIndex(indexContent: index - 1);
+                            },
+                            icon: const RotatedBox(
+                              quarterTurns: 2,
+                              child: Icon(Iconsax.send_1_outline),
+                            ),
+                          ));
+                        }
+                        if ((index + 1) < total_length) {
+                          children.add(IconButton(
+                            onPressed: () {
+                              setContentByIndex(indexContent: index + 1);
+                            },
+                            icon: const Icon(Iconsax.send_1_outline),
+                          ));
+                        }
+                        return children;
+                      }(),
+                    ),
+                  ],
+                  FooterBlogWidget(
+                    authorUrlSocialMedias: widget.authorUrlSocialMedias,
+                    blogFooterData: widget.blogFooterData,
+                  ),
+                  if (context.orientation.isPortrait) ...[
+                    SizedBox(
+                      height: context.mediaQueryData.padding.bottom,
+                    ),
+                  ],
+                ],
               ),
             ),
-            FooterBlogWidget(
-              authorUrlSocialMedias: widget.authorUrlSocialMedias,
-              blogFooterData: widget.blogFooterData,
-            ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }

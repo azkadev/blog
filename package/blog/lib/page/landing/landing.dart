@@ -34,6 +34,8 @@ Bukan maksud kami menipu itu karena harga yang sudah di kalkulasi + bantuan tiba
 
 
 <!-- END LICENSE --> */
+
+import 'package:blog/widget/blog_container.dart';
 import 'package:flutter/material.dart';
 import 'package:general_lib/general_lib.dart';
 import 'package:general_lib_flutter/general_lib_flutter.dart';
@@ -41,14 +43,15 @@ import 'package:blog/page/blog/blog.dart';
 import 'package:blog/scheme/scheme.dart';
 import 'package:blog/widget/author.dart';
 import 'package:blog/widget/footer.dart';
-import 'package:blog/widget/markdown/markdown.dart';
 
 class LandingPageBlog extends StatefulWidget {
-  final BlogData blogData;
+  final BlogHomeData blogHomeData;
+  final List<BlogsData> blogsDatas;
   final GeneralLibFlutterApp generalLibFlutterApp;
   const LandingPageBlog({
     super.key,
-    required this.blogData,
+    required this.blogHomeData,
+    required this.blogsDatas,
     required this.generalLibFlutterApp,
   });
 
@@ -57,10 +60,9 @@ class LandingPageBlog extends StatefulWidget {
 }
 
 class _LandingPageBlogState extends State<LandingPageBlog> {
-  GlobalKey globalKey = GlobalKey();
+  final GlobalKey globalKey = GlobalKey();
+  final ScrollControllerAutoKeepStateData scroll_controller_auto__keep_state_data = ScrollControllerAutoKeepStateData(keyId: "blog_page_landing");
 
-  ScrollControllerAutoKeepStateData scroll_controller_auto_keep_state_data =
-      ScrollControllerAutoKeepStateData(keyId: "landing_page_blog");
   @override
   void initState() {
     super.initState();
@@ -110,176 +112,199 @@ class _LandingPageBlogState extends State<LandingPageBlog> {
               SizedBox(
                 height: context.mediaQueryData.padding.top,
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  TextButton(
-                    onPressed: () async {
-                      context.navigator().pushReplacement(MaterialPageRoute(
-                        builder: (context) {
-                          return LandingPageBlog(
-                            blogData: widget.blogData,
-                            generalLibFlutterApp: widget.generalLibFlutterApp,
-                          );
-                        },
-                      ));
-                    },
-                    child: Text(
-                      "${widget.blogData.title}".trim(),
-                      style: TextStyle(
-                        color: context.theme.indicatorColor,
+              Builder(
+                builder: (context) {
+                  List<Widget> children = [
+                    TextButton(
+                      onPressed: () async {
+                        context.navigator().pushReplacement(MaterialPageRoute(
+                          builder: (context) {
+                            return LandingPageBlog(
+                              blogHomeData: widget.blogHomeData,
+                              blogsDatas: widget.blogsDatas,
+                              generalLibFlutterApp: widget.generalLibFlutterApp,
+                            );
+                          },
+                        ));
+                      },
+                      child: Text(
+                        "${widget.blogHomeData.title}".trim(),
+                        style: TextStyle(
+                          color: context.theme.indicatorColor,
+                          shadows: [
+                            BoxShadow(
+                              color: context.theme.shadowColor.withAlpha(110),
+                              spreadRadius: 1,
+                              blurRadius: 7,
+                              offset: const Offset(0, 3), // changes position of shadow
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  // auto change theme
-                  Builder(
-                    builder: (context) {
-                      // theme mode
-                      return IconButton(
+                    // auto change theme
+                    Builder(
+                      builder: (context) {
+                        // theme mode
+                        return IconButton(
+                          onPressed: () {
+                            widget.generalLibFlutterApp.autoChangeTheme(
+                              onChangeBrightness: () {
+                                return context.mediaQueryData.platformBrightness;
+                              },
+                            );
+                            setState(() {});
+                          },
+                          icon: Icon(
+                            () {
+                              if (widget.generalLibFlutterApp.themeMode == ThemeMode.dark) {
+                                return Icons.dark_mode;
+                              }
+                              if (widget.generalLibFlutterApp.themeMode == ThemeMode.light) {
+                                return Icons.light_mode;
+                              }
+
+                              return Icons.auto_mode;
+                            }(),
+                            shadows: [
+                              BoxShadow(
+                                color: context.theme.shadowColor.withAlpha(110),
+                                spreadRadius: 1,
+                                blurRadius: 7,
+                                offset: const Offset(0, 3), // changes position of shadow
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                  ];
+                  if (context.navigator().canPop()) {
+                    children.insert(
+                      0,
+                      IconButton(
                         onPressed: () {
-                          widget.generalLibFlutterApp.autoChangeTheme(
-                            onChangeBrightness: () {
-                              return context.mediaQueryData.platformBrightness;
-                            },
-                          );
-                          setState(() {});
+                          context.navigator().pop();
                         },
                         icon: Icon(
-                          () {
-                            if (widget.generalLibFlutterApp.themeMode ==
-                                ThemeMode.dark) {
-                              return Icons.dark_mode;
-                            }
-                            if (widget.generalLibFlutterApp.themeMode ==
-                                ThemeMode.light) {
-                              return Icons.light_mode;
-                            }
-
-                            return Icons.auto_mode;
-                          }(),
+                          Icons.arrow_back,
+                          shadows: [
+                            BoxShadow(
+                              color: context.theme.shadowColor.withAlpha(110),
+                              spreadRadius: 1,
+                              blurRadius: 7,
+                              offset: const Offset(0, 3), // changes position of shadow
+                            ),
+                          ],
                         ),
-                      );
-                    },
-                  ),
-                ],
+                      ),
+                    );
+                  }
+                  return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: children);
+                },
               ),
             ],
           ),
         ),
       ),
-      body: scroll_controller_auto_keep_state_data.builderWidget(
-        builder: (context, pageStorageBucket) {
-          return SingleChildScrollView(
-            controller:
-                scroll_controller_auto_keep_state_data.scroll_controller,
-            physics: const BouncingScrollPhysics(
-                parent: AlwaysScrollableScrollPhysics()),
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                minHeight: context.height,
-                minWidth: context.width,
-                maxHeight: double.maxFinite,
-                // maxWidth: context.width,
-              ),
-              child: Builder(
-                builder: (context) {
-                  List<Widget> children = [
+      body: scroll_controller_auto__keep_state_data.build(
+        child: Builder(
+          builder: (context) {
+            return SingleChildScrollView(
+              controller: scroll_controller_auto__keep_state_data.scroll_controller,
+              physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  minHeight: context.height,
+                  minWidth: context.width,
+                  maxHeight: double.maxFinite,
+                  // maxWidth: context.width,
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
                     SizedBox.fromSize(
                       size: globalKey.sizeRenderBox(),
                     ),
+                    //
+                    //
 
                     Padding(
-                      padding: const EdgeInsets.all(20),
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 20,
+                        horizontal: 5,
+                      ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Visibility(
-                            visible:
-                                "${widget.blogData.logo}".trim().isNotEmpty,
+                            visible: "${widget.blogHomeData.logo}".trim().isNotEmpty,
                             child: Image.asset(
-                              "${widget.blogData.logo}",
+                              "${widget.blogHomeData.logo}",
                             ),
                           ),
                           Text(
-                            "${widget.blogData.title}".trim(),
+                            "${widget.blogHomeData.title}".trim(),
                             style: TextStyle(
                               color: context.theme.indicatorColor,
                               fontSize: 30,
+                              shadows: [
+                                BoxShadow(
+                                  color: context.theme.shadowColor.withAlpha(110),
+                                  spreadRadius: 1,
+                                  blurRadius: 7,
+                                  offset: const Offset(0, 3), // changes position of shadow
+                                ),
+                              ],
                             ),
                           ),
                           const SizedBox(
                             height: 10,
                           ),
                           Text(
-                            "${widget.blogData.description}".trim(),
+                            "${widget.blogHomeData.description}".trim(),
                             style: TextStyle(
                               color: context.theme.indicatorColor,
+                              shadows: [
+                                BoxShadow(
+                                  color: context.theme.shadowColor.withAlpha(110),
+                                  spreadRadius: 1,
+                                  blurRadius: 7,
+                                  offset: const Offset(0, 3), // changes position of shadow
+                                ),
+                              ],
                             ),
                             textAlign: TextAlign.center,
                           ),
 
                           //
                           AuthorBlogWidget(
-                            authorUrlSocialMedias:
-                                widget.blogData.author_url_social_medias,
+                            authorUrlSocialMedias: widget.blogHomeData.author_url_social_medias,
                           ),
                         ],
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.all(20),
-                      child: MarkdownBlogWidget(
-                        alignment: Alignment.center,
-                        text: () async {
-                          return (widget.blogData.content ?? "").trim();
-                        },
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 20,
+                        horizontal: 5,
                       ),
-                    ),
-
-                    //
-                    Padding(
-                      padding: const EdgeInsets.all(20),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
-                            "Example Project Use This Library",
+                            "Blogs",
                             style: TextStyle(
                               color: context.theme.indicatorColor,
                               fontSize: 30,
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Text(
-                            """
-Berikut adalah beberapa contoh project yang menggunakan library ${widget.blogData.title}
-"""
-                                .trim(),
-                            style: TextStyle(
-                              color: context.theme.indicatorColor,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    //
-                    //
-
-                    //
-                    Padding(
-                      padding: const EdgeInsets.all(20),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            "Docs",
-                            style: TextStyle(
-                              color: context.theme.indicatorColor,
-                              fontSize: 30,
+                              shadows: [
+                                BoxShadow(
+                                  color: context.theme.shadowColor.withAlpha(110),
+                                  spreadRadius: 1,
+                                  blurRadius: 7,
+                                  offset: const Offset(0, 3), // changes position of shadow
+                                ),
+                              ],
                             ),
                           ),
                           const SizedBox(
@@ -288,116 +313,82 @@ Berikut adalah beberapa contoh project yang menggunakan library ${widget.blogDat
                         ],
                       ),
                     ),
-                    Flexible(
-                      child: Builder(
-                        builder: (context) {
-                          List<BlogsData> blogs = widget.blogData.blogs;
-                          return GridView.builder(
-                            gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 3,
-                                    mainAxisSpacing: 5,
-                                    crossAxisSpacing: 5,
-                                    childAspectRatio: 16 / 9),
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemCount: blogs.length,
-                            padding: const EdgeInsets.all(20),
-                            itemBuilder: (context, index) {
-                              BlogsData blogsData = blogs[index];
-                              return Column(
-                                children: [
-                                  Flexible(
-                                    child: Text(
-                                      "${blogsData.title}",
-                                      style: TextStyle(
-                                        color: context.theme.indicatorColor,
-                                        fontSize: 20,
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                  Flexible(
-                                    child: Text(
-                                      "${blogsData.description}".trim(),
-                                      // overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      color: context.theme.dialogBackgroundColor
-                                          .withOpacity(0.85),
-                                      borderRadius:
-                                          BorderRadiusDirectional.circular(20),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: context.theme.shadowColor
-                                              .withAlpha(110),
-                                          spreadRadius: 1,
-                                          blurRadius: 7,
-                                          offset: const Offset(0,
-                                              3), // changes position of shadow
-                                        ),
-                                      ],
-                                    ),
-                                    clipBehavior: Clip.antiAlias,
-                                    child: MaterialButton(
-                                      onPressed: () async {
-                                        context.navigator().push(
-                                          MaterialPageRoute(
-                                            builder: (context) {
-                                              return BlogPageBlog(
-                                                blogsData: blogsData,
-                                                authorUrlSocialMedias: widget
-                                                    .blogData
-                                                    .author_url_social_medias,
-                                                blogFooterData:
-                                                    widget.blogData.footer,
-                                                generalLibFlutterApp:
-                                                    widget.generalLibFlutterApp,
-                                              );
-                                            },
-                                          ),
+                    () {
+                      final List<BlogsData> blogsDatas = widget.blogsDatas.take((Dart.isMobile) ? 10 : 20).toList();
+                      return MediaQuery.removePadding(
+                        context: context,
+                        removeBottom: true,
+                        removeLeft: true,
+                        removeRight: true,
+                        removeTop: true,
+                        child: Wrap(
+                          // spacing: 3,
+                          // runSpacing: 3,
+                          direction: (context.mediaQueryData.orientation.isPortrait) ? Axis.vertical : Axis.horizontal,
+                          alignment: WrapAlignment.start,
+                          children: blogsDatas.map((e) {
+                            final Size size = Size(
+                              ((context.mediaQueryData.orientation.isPortrait) ? context.width : context.width / 2.5) - 20,
+                              (context.height / 2) - 20,
+                            );
+                            return Container(
+                              width: size.width,
+                              height: size.height,
+                              // margin: const EdgeInsets.all(10),
+                              alignment: Alignment.center,
+                              // decoration: BoxDecoration(
+                              //   border: Border.all(
+                              //     color: context.theme.indicatorColor,
+                              //   ),
+                              // ),
+                              // padding: EdgeInsets.all(5),
+                              child: MediaQuery(
+                                data: context.mediaQueryData.copyWith(
+                                  size: size,
+                                ),
+                                child: Builder(
+                                  builder: (context) {
+                                    return BlogContainerWidget(
+                                      blogsData: e,
+                                      onTap: () {
+                                        handleFunction(
+                                          onFunction: (context, statefulWidget) async {
+                                            context.navigator().push(MaterialPageRoute(
+                                              builder: (context) {
+                                                return BlogPageBlog(
+                                                  blogsData: e,
+                                                  authorUrlSocialMedias: widget.blogHomeData.author_url_social_medias,
+                                                  blogFooterData: widget.blogHomeData.footer,
+                                                  generalLibFlutterApp: widget.generalLibFlutterApp,
+                                                );
+                                              },
+                                            ));
+                                          },
                                         );
                                       },
-                                      child: const Text(
-                                        "Read More",
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        },
-                      ),
-                    ),
+                                    );
+                                  },
+                                ),
+                              ),
+                            );
+                            
+                          }).toList(),
+                        ),
+                      );
+                    }(),
                     FooterBlogWidget(
-                      authorUrlSocialMedias:
-                          widget.blogData.author_url_social_medias,
-                      blogFooterData: widget.blogData.footer,
+                      authorUrlSocialMedias: widget.blogHomeData.author_url_social_medias,
+                      blogFooterData: widget.blogHomeData.footer,
                     ),
-                  ];
-                  children.add(
                     SizedBox(
                       height: context.mediaQueryData.padding.bottom,
                     ),
-                  );
-                  context.mediaQueryData.padding.bottom.printPretty();
-                  return Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: children,
-                  );
-                },
+                  ],
+                ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }

@@ -37,6 +37,7 @@ Bukan maksud kami menipu itu karena harga yang sudah di kalkulasi + bantuan tiba
 import 'package:cool_alert/cool_alert.dart';
 import 'package:easy_rich_text/easy_rich_text.dart';
 import 'package:flutter/material.dart';
+import 'package:general_lib_flutter/general_lib_flutter.dart';
 import 'package:markdown_flutter/markdown_flutter.dart';
 import 'package:markdown_widget/markdown_widget.dart';
 
@@ -158,8 +159,16 @@ class _CallbackDataWidgetState extends State<CallbackDataWidget> {
       onTap: () async {},
       child: Text(
         widget.text,
-        style: const TextStyle(
+        style: TextStyle(
           color: Colors.blue,
+          shadows: [
+            BoxShadow(
+              color: context.theme.shadowColor.withAlpha(110),
+              spreadRadius: 1,
+              blurRadius: 7,
+              offset: const Offset(0, 3), // changes position of shadow
+            ),
+          ],
         ),
       ),
     );
@@ -195,25 +204,21 @@ class MarkdownTextNodeCustomWidget extends StatefulWidget {
   });
 
   @override
-  State<MarkdownTextNodeCustomWidget> createState() =>
-      _MarkdownTextNodeCustomWidgetState();
+  State<MarkdownTextNodeCustomWidget> createState() => _MarkdownTextNodeCustomWidgetState();
 }
 
-class _MarkdownTextNodeCustomWidgetState
-    extends State<MarkdownTextNodeCustomWidget> {
+class _MarkdownTextNodeCustomWidgetState extends State<MarkdownTextNodeCustomWidget> {
   @override
   Widget build(BuildContext context) {
     String url = () {
-      if (widget.attribute["url"] is String &&
-          (widget.attribute["url"] as String).isNotEmpty) {
+      if (widget.attribute["url"] is String && (widget.attribute["url"] as String).isNotEmpty) {
         return (widget.attribute["url"] as String);
       }
       return "";
     }();
     double? fontSize = () {
       try {
-        double sizeFont =
-            (int.tryParse(widget.attribute["size"] ?? "0") ?? 0).toDouble();
+        double sizeFont = (int.tryParse(widget.attribute["size"] ?? "0") ?? 0).toDouble();
         if (sizeFont > 0) {
           return sizeFont;
         }
@@ -228,8 +233,17 @@ class _MarkdownTextNodeCustomWidgetState
         patternList: const [],
         defaultStyle: TextStyle(
           // fontFamily: "NotoEmoji",
+          
           color: (url.isNotEmpty) ? Colors.blue : null,
           fontSize: fontSize,
+          shadows: [
+            BoxShadow(
+              color: context.theme.shadowColor.withAlpha(110),
+              spreadRadius: 1,
+              blurRadius: 7,
+              offset: const Offset(0, 3), // changes position of shadow
+            ),
+          ],
         ),
       );
 

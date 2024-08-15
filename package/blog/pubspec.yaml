@@ -1,6 +1,7 @@
 name: 'blog'
 description: 'A Library for create blog super easy and fast customizable'
-version: '0.0.1'
+version: '0.0.2'
+publish_to: 'none'
 environment: 
   sdk: '>=3.3.3 <4.0.0'
   flutter: '>=1.17.0'
@@ -19,6 +20,8 @@ dependencies:
   flutter_hicons: '^0.1.0'
   url_launcher: '^6.2.6'
   cool_alert: '^2.0.1'
+  general_lib_assets_flutter: '^0.0.0'
+  intl: any
 dev_dependencies: 
   flutter_test: 
     sdk: 'flutter'

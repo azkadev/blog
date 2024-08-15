@@ -82,50 +82,67 @@ class _FooterBlogWidgetState extends State<FooterBlogWidget> {
           child: Builder(
             builder: (context) {
               List<Widget> children = [
-                AuthorBlogWidget(
-                  direction: Axis.vertical,
-                  isShowTitle: true,
-                  title: "My Social Media",
-                  authorUrlSocialMedias: links,
+                Padding(
+                  padding: EdgeInsets.all(10),
+                  child: AuthorBlogWidget(
+                    direction: Axis.vertical,
+                    isShowTitle: true,
+                    title: "My Social Media",
+                    authorUrlSocialMedias: links,
+                  ),
                 ),
               ];
               for (var element in widget.blogFooterData.footers) {
-                var footers = element.footer;
-                children.add(ListWithBlogWidget(
-                  itemCount: footers.length,
-                  isShowTitle: true,
-                  title: "${element.title}".trim(),
-                  direction: Axis.vertical,
-                  authorUrlSocialMedias: widget.authorUrlSocialMedias,
-                  builder: (context, index) {
-                    FooterData footerData = footers[index];
-                    return TextButton(
-                      onPressed: () async {
-                        await launchUrlString(footerData.url ?? "",
-                            mode: LaunchMode.externalApplication);
+                final footers = element.footer;
+                children.add(
+                  Padding(
+                    padding: EdgeInsets.all(10),
+                    child: ListWithBlogWidget(
+                      itemCount: footers.length,
+                      isShowTitle: true,
+                      title: "${element.title}".trim(),
+                      direction: Axis.vertical,
+                      authorUrlSocialMedias: widget.authorUrlSocialMedias,
+                      builder: (context, index) {
+                        FooterData footerData = footers[index];
+                        return TextButton(
+                          onPressed: () async {
+                            await launchUrlString(footerData.url ?? "", mode: LaunchMode.externalApplication);
+                          },
+                          child: Text(
+                            "${footerData.title}".trim(),
+                            style: TextStyle(
+                              color: context.theme.indicatorColor,
+                              shadows: [
+                                BoxShadow(
+                                  color: context.theme.shadowColor.withAlpha(110),
+                                  spreadRadius: 1,
+                                  blurRadius: 7,
+                                  offset: const Offset(0, 3), // changes position of shadow
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
                       },
-                      child: Text(
-                        "${footerData.title}".trim(),
-                        style: TextStyle(
-                          color: context.theme.indicatorColor,
-                        ),
-                      ),
-                    );
-                  },
-                ));
-              }
-              if (context.orientation.isPortrait) {
-                return Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: children,
+                    ),
+                  ),
                 );
               }
-              return Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: children,
-              );
+              return MediaQuery.removePadding(
+                context: context,
+                removeBottom: true,
+                removeLeft: true,
+                removeRight: true,
+                removeTop: true,
+                child: Wrap(
+                  spacing: 10,
+                  runSpacing: 10,
+                  direction: (context.mediaQueryData.orientation.isPortrait) ? Axis.vertical : Axis.horizontal,
+                  alignment: WrapAlignment.center,
+                  children: children,
+                ),
+              ); 
             },
           ),
         ),
@@ -135,7 +152,15 @@ class _FooterBlogWidgetState extends State<FooterBlogWidget> {
             "@ Copyright 2024 - ${DateTime.now().year}",
             style: TextStyle(
               color: context.theme.indicatorColor,
-              fontSize: 30,
+              fontSize: 10,
+              shadows: [
+                BoxShadow(
+                  color: context.theme.shadowColor.withAlpha(110),
+                  spreadRadius: 1,
+                  blurRadius: 7,
+                  offset: const Offset(0, 3), // changes position of shadow
+                ),
+              ],
             ),
           ),
         ),
@@ -157,8 +182,7 @@ class _FooterBlogWidgetState extends State<FooterBlogWidget> {
       iconData = IonIcons.logo_twitter;
     } else if (RegExp("(github)", caseSensitive: false).hasMatch(link)) {
       iconData = IonIcons.logo_github;
-    } else if (RegExp("(telegram|t[.]me)", caseSensitive: false)
-        .hasMatch(link)) {
+    } else if (RegExp("(telegram|t[.]me)", caseSensitive: false).hasMatch(link)) {
       iconData = Icons.telegram;
     }
 
@@ -173,11 +197,20 @@ class _FooterBlogWidgetState extends State<FooterBlogWidget> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Padding(
-            padding: const EdgeInsets.all(5),
-            child: Icon(
-              iconData,
-              color: context.theme.indicatorColor,
-            )),
+          padding: const EdgeInsets.all(5),
+          child: Icon(
+            iconData,
+            color: context.theme.indicatorColor,
+            shadows: [
+              BoxShadow(
+                color: context.theme.shadowColor.withAlpha(110),
+                spreadRadius: 1,
+                blurRadius: 7,
+                offset: const Offset(0, 3), // changes position of shadow
+              ),
+            ],
+          ),
+        ),
         const SizedBox(
           width: 5,
         ),

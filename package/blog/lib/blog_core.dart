@@ -39,11 +39,13 @@ import 'package:blog/page/landing/landing.dart';
 import 'package:general_lib_flutter/general_lib_flutter.dart';
 
 class BlogApp extends StatefulWidget {
-  final BlogData blogData;
+  final BlogHomeData blogHomeData;
+  final List<BlogsData> blogsDatas;
   final GeneralLibFlutterApp generalLibFlutterApp;
   const BlogApp({
     super.key,
-    required this.blogData,
+    required this.blogHomeData,
+    required this.blogsDatas,
     required this.generalLibFlutterApp,
   });
 
@@ -65,17 +67,21 @@ class _BlogAppState extends State<BlogApp> {
     setState(() {});
 
     Future(() async {
-      widget.generalLibFlutterApp.initState(context: context, themeMode: widget.generalLibFlutterApp.themeMode, onSet:() {
-        setState(() {
-          
-        });
-      },);
+      widget.generalLibFlutterApp.initState(
+        context: context,
+        themeMode: widget.generalLibFlutterApp.themeMode,
+        onSet: () {
+          setState(() {});
+        },
+      );
       await Future.delayed(Durations.extralong4);
+
       // ignore: use_build_context_synchronously
-      context.navigator().push(MaterialPageRoute(
+      context.navigator().pushReplacement(MaterialPageRoute(
         builder: (context) {
           return LandingPageBlog(
-            blogData: widget.blogData,
+            blogHomeData: widget.blogHomeData,
+            blogsDatas: widget.blogsDatas,
             generalLibFlutterApp: widget.generalLibFlutterApp,
           );
         },

@@ -145,8 +145,7 @@ class _ImagesWidgetState extends State<MediasWidget> {
         return null;
       }
       if (RegExp(r"^(http(s)?:)", caseSensitive: false).hasMatch(image_data)) {
-        if (RegExp("(youtube.com)", caseSensitive: false)
-            .hasMatch(image_data)) {
+        if (RegExp("(youtube.com)", caseSensitive: false).hasMatch(image_data)) {
           is_youtube = true;
         }
         return Image.network(
@@ -156,8 +155,7 @@ class _ImagesWidgetState extends State<MediasWidget> {
           },
         );
       }
-      if (RegExp(r"^(assets|packages)", caseSensitive: false)
-          .hasMatch(image_data)) {
+      if (RegExp(r"^(assets|packages)", caseSensitive: false).hasMatch(image_data)) {
         return Image.asset(
           image_data,
           errorBuilder: (context, error, stackTrace) {
@@ -205,6 +203,14 @@ class _ImagesWidgetState extends State<MediasWidget> {
               style: TextStyle(
                 color: context.theme.indicatorColor,
                 fontSize: 20,
+                shadows: [
+                  BoxShadow(
+                    color: context.theme.shadowColor.withAlpha(110),
+                    spreadRadius: 1,
+                    blurRadius: 7,
+                    offset: const Offset(0, 3), // changes position of shadow
+                  ),
+                ],
               ),
             ),
             image ?? const SizedBox.shrink(),
@@ -338,6 +344,14 @@ class FullScreenPageState extends State<FullScreenPage> {
                   Icons.arrow_back,
                   color: widget.dark ? Colors.white : Colors.black,
                   size: 25,
+                  shadows: [
+                    BoxShadow(
+                      color: context.theme.shadowColor.withAlpha(110),
+                      spreadRadius: 1,
+                      blurRadius: 7,
+                      offset: const Offset(0, 3), // changes position of shadow
+                    ),
+                  ],
                 ),
               ),
             ),
